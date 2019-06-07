@@ -9,8 +9,6 @@ import warnings
 import os
 
 # pip install -r requirements.txt 
-warnings.filterwarnings("ignore")
-py.offline.init_notebook_mode(connected = True)
 
 df = pd.read_csv('./dataset/Mall_Customers.csv')
 # print(df.head())
@@ -55,7 +53,7 @@ def age_vs_annual_gender():
     plt.title('Age vs annual Income sorted by gender')
     plt.legend()
     plt.show()
-def k_means_test():
+def k_means_age_spending():
     X1 = df[['Age' , 'Spending Score (1-100)']].iloc[: , :].values
     inertia = []
     for n in range(1 , 11):
@@ -65,9 +63,18 @@ def k_means_test():
                             tol=0.0001,  random_state= 111  , algorithm='elkan') )
         algorithm.fit(X1)
         inertia.append(algorithm.inertia_)
-        print(inertia)
+    plt.figure(1, figsize=(15,6))
+    plt.plot(np.arange(1,11), inertia, 0)
+    plt.plot(np.arange(1,11), inertia, '-', alpha=0.5)
+    plt.xlabel('Number Of Clusters'), plt.ylabel("Inertia")
+    plt.show()
+    algorithm = (KMeans(n_clusters=4, init="k-means++", n_init=10, max_iter= 300,
+                        tol=-.0001, random_state= 111, algorithm= "elkan"))
+    algorithm.fit(X1)
+    labels1 = algorithm.labels_
+    centroids1 = algorithm.cluster_centers_
 # histograms()
 # genders()
 # relationships(['Age' , 'Annual Income (k$)' , 'Spending Score (1-100)'])
 # age_vs_annual_gender()
-k_means_test()
+k_means_age_spending()
